@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+
+@property IBOutlet UITableView * tableView;
+@property (strong) NSArray *beacons;
+@property double beaconRssi;
+@property IBOutlet UILabel *positionLabel;
+@property IBOutlet UILabel *distanceLabel;
+
+
+
 
 @end

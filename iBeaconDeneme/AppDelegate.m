@@ -7,13 +7,115 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
+
+#import <CoreLocation/CoreLocation.h>
+
 
 @implementation AppDelegate
 
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    return YES;
+
+        // Override point for customization after application launch.
+    
+    // UUID for first 2 beacons
+    NSUUID *beaconUUID = [[NSUUID alloc] initWithUUIDString:@"824C42CF-ECFF-4045-A632-014FF08DF948"];
+    //NSString *beaconIdentifier = @"myBeacon";
+    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beaconUUID
+                                                                      identifier:@"myBeaconIdentifier"];
+    
+    //UUID for third beacon
+    NSUUID *beacon2UUID = [[NSUUID alloc] initWithUUIDString:@"70EE9563-EC34-489F-897C-79A3D0D41481"];
+    //NSString *beacon2Identifier = @"myBeacon2";
+    CLBeaconRegion *beacon2Region = [[CLBeaconRegion alloc] initWithProximityUUID:beacon2UUID
+                                                                       identifier:@"myBeaconIdentifier2"];
+
+    
+        self.locationManager = [[CLLocationManager alloc] init];
+        // New iOS 8 request for Always Authorization, required for iBeacons to work!
+        /*if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+            [self.locationManager requestAlwaysAuthorization];
+        }*/
+        self.locationManager.delegate = self;
+        self.locationManager.pausesLocationUpdatesAutomatically = NO;
+    
+        [self.locationManager startMonitoringForRegion:beaconRegion]; // first 2 beacon
+        [self.locationManager startRangingBeaconsInRegion:beaconRegion];
+    
+        [self.locationManager startMonitoringForRegion:beacon2Region]; //third beacon
+        [self.locationManager startRangingBeaconsInRegion:beacon2Region];
+    
+        [self.locationManager startUpdatingLocation];
+        
+        return YES;
+}
+
+-(void)sendLocalNotificationWithMessage:(NSString*)message {
+    
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    notification.alertBody = message;
+    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didRangeBeacons:
+
+    (NSArray *)beacons inRegion:(CLBeaconRegion *)region {
+    
+        ViewController *viewController = (ViewController*)self.window.rootViewController;
+        viewController.beacons = beacons;
+        [viewController.tableView reloadData];
+    
+        NSString *message = @"";
+    
+        if(beacons.count > 0) {
+            CLBeacon *nearestBeacon = beacons.firstObject;
+            
+            if(nearestBeacon.proximity == self.lastProximity ||
+               nearestBeacon.proximity == CLProximityUnknown) {
+                return;
+            }
+            self.lastProximity = nearestBeacon.proximity;
+            
+            switch(nearestBeacon.proximity) {
+                case CLProximityFar:
+                    message = @"You are far away from the beacon";
+                    break;
+                case CLProximityNear:
+                    message = @"You are near the beacon";
+                    break;
+                case CLProximityImmediate:
+                    message = @"You are in the immediate proximity of the beacon";
+                    break;
+                case CLProximityUnknown:
+                    return;
+        }
+            
+        } else {
+            message = @"No beacons are nearby";
+        }
+    
+        NSLog(@"%@", message);
+        [self sendLocalNotificationWithMessage:message];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    
+        [manager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
+        [self.locationManager startUpdatingLocation];
+    
+        NSLog(@"You entered the region.");
+        [self sendLocalNotificationWithMessage:@"You entered the region."];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    
+        [manager stopRangingBeaconsInRegion:(CLBeaconRegion*)region];
+        [self.locationManager stopUpdatingLocation];
+    
+        NSLog(@"You exited the region.");
+        [self sendLocalNotificationWithMessage:@"You exited the region."];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

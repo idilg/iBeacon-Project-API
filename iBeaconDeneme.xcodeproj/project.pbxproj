@@ -21,6 +21,7 @@
 		1A09B01019A3790E004AD4FB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A09AFF219A3790E004AD4FB /* UIKit.framework */; };
 		1A09B01819A3790E004AD4FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A09B01619A3790E004AD4FB /* InfoPlist.strings */; };
 		1A09B01A19A3790E004AD4FB /* iBeaconDenemeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A09B01919A3790E004AD4FB /* iBeaconDenemeTests.m */; };
+		1A09B02719A4836D004AD4FB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A09B02619A4836D004AD4FB /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		1A09B01519A3790E004AD4FB /* iBeaconDenemeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iBeaconDenemeTests-Info.plist"; sourceTree = "<group>"; };
 		1A09B01719A3790E004AD4FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1A09B01919A3790E004AD4FB /* iBeaconDenemeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iBeaconDenemeTests.m; sourceTree = "<group>"; };
+		1A09B02619A4836D004AD4FB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A09B02719A4836D004AD4FB /* CoreLocation.framework in Frameworks */,
 				1A09AFF119A3790E004AD4FB /* CoreGraphics.framework in Frameworks */,
 				1A09AFF319A3790E004AD4FB /* UIKit.framework in Frameworks */,
 				1A09AFEF19A3790E004AD4FB /* Foundation.framework in Frameworks */,
@@ -101,6 +104,7 @@
 		1A09AFED19A3790E004AD4FB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A09B02619A4836D004AD4FB /* CoreLocation.framework */,
 				1A09AFEE19A3790E004AD4FB /* Foundation.framework */,
 				1A09AFF019A3790E004AD4FB /* CoreGraphics.framework */,
 				1A09AFF219A3790E004AD4FB /* UIKit.framework */,
@@ -199,6 +203,14 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "İdil Gücüyener";
 				TargetAttributes = {
+					1A09AFEA19A3790E004AD4FB = {
+						DevelopmentTeam = 8R45P3EB2R;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					1A09B00B19A3790E004AD4FB = {
 						TestTargetID = 1A09AFEA19A3790E004AD4FB;
 					};
@@ -317,6 +329,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -333,8 +346,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "58a54788-0089-445d-bc89-ec0e623d136c";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -355,6 +369,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -365,7 +380,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PROVISIONING_PROFILE = "58a54788-0089-445d-bc89-ec0e623d136c";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -376,10 +392,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iBeaconDeneme/iBeaconDeneme-Prefix.pch";
 				INFOPLIST_FILE = "iBeaconDeneme/iBeaconDeneme-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -389,10 +409,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iBeaconDeneme/iBeaconDeneme-Prefix.pch";
 				INFOPLIST_FILE = "iBeaconDeneme/iBeaconDeneme-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -456,6 +480,7 @@
 				1A09B01F19A3790E004AD4FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1A09B02019A3790E004AD4FB /* Build configuration list for PBXNativeTarget "iBeaconDenemeTests" */ = {
 			isa = XCConfigurationList;
@@ -464,6 +489,7 @@
 				1A09B02219A3790E004AD4FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
