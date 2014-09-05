@@ -15,7 +15,8 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property CLProximity lastProximity;
-
-
+@property (nonatomic, strong) NSArray *jsonArray;
+@property (nonatomic, strong) NSData *jsonData;
+@property UIBackgroundTaskIdentifier * backgroundTask;
 
 @end

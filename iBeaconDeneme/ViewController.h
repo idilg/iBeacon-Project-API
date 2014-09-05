@@ -15,8 +15,7 @@
 @property double beaconRssi;
 @property IBOutlet UILabel *positionLabel;
 @property IBOutlet UILabel *distanceLabel;
-
-
-
+@property (strong, nonatomic) NSArray *tableArray;
+@property (strong, nonatomic) NSData *receivedData;
 
 @end

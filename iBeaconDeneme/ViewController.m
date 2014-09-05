@@ -17,12 +17,33 @@
 
 @synthesize positionLabel;
 @synthesize distanceLabel;
+@synthesize receivedData;
+@synthesize tableArray;
+@synthesize tableView;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    //[NSTimer timerWithTimeInterval:1 target:self selector:@selector(compareBeacons) userInfo:nil repeats:YES];
+    
+    
+    NSString *json = [NSData dataWithContentsOfURL: [NSURL URLWithString:@"http://bilmiyordum.com/poi.json"]];
+    NSError *e;
+    if(json){
+        NSArray *myArray = [NSJSONSerialization JSONObjectWithData:json options:nil error:&e];
+        
+        tableArray = [[NSArray alloc] initWithArray:myArray];
+        
+        [tableView reloadData];
+
+    }else{
+        NSLog(@"data yokmuş");
+    }
+
+    
+    [self performSelector:@selector(compareBeacons) withObject:nil afterDelay:1];
 }
 
 - (void)didReceiveMemoryWarning
@@ -31,8 +52,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (NSInteger) tableView:(UITableView *)tableView
-  numberOfRowsInSection:(NSInteger)section {
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     return self.beacons.count;
 }
 
@@ -49,9 +70,7 @@
     
     CLBeacon *beacon = (CLBeacon*)[self.beacons objectAtIndex:indexPath.row];
     CLBeacon *beacon2 = (CLBeacon*)[self.beacons objectAtIndex:indexPath.row];
-    
-    [self calculateProximityWithBeacon1:beacon andBeacon2:beacon2];
-    [self calculateAccuracy:beacon];
+
     
     NSString *proximityLabel = @"";
     
@@ -80,46 +99,81 @@
                              beacon.proximityUUID.UUIDString];
     
     cell.detailTextLabel.text = detailLabel;
+    
+    [self calculateProximityWithBeacon1:beacon andBeacon2:beacon2];
+    
     return cell;    
 }
 
 -(void) calculateProximityWithBeacon1:(CLBeacon *)beacon andBeacon2:(CLBeacon*) beacon2 {
     
-    //int majorv, minorv;
-    double beacon1Rssi = beacon.rssi;
-    double beacon2Rssi = beacon.rssi;
+    double beacon1Rssi = beacon.rssi * -1;
+    double beacon2Rssi = beacon2.rssi * -1;
     NSString * position= @"";
     
     if(beacon.major != beacon2.major) {
         
-        if(beacon1Rssi >= 20 && beacon1Rssi<= 60 && beacon2Rssi >= 20 && beacon2Rssi <= 60){
+        if((beacon1Rssi <= beacon2Rssi+2 && beacon1Rssi >= beacon2Rssi-2) ||
+           (beacon2Rssi <= beacon1Rssi+2 && beacon2Rssi >= beacon1Rssi-2)){
             
-            NSLog(@"ortada");
-            position = [NSString stringWithFormat:@"ortada"];
+            NSLog(@"eşit uzaklıkta/ortada");
+            position = [NSString stringWithFormat:@"eşit uzaklıkta/ortada"];
             [positionLabel setText:position];
-        }else if ((beacon1Rssi >= 0 || beacon1Rssi<= 20) && (beacon2Rssi >= 20 || beacon2Rssi <= 60)){
             
-            NSLog(@"solda");
-            NSLog(@"%f %f", beacon1Rssi, beacon2Rssi);
-            position = [NSString stringWithFormat:@"solda"];
-            [positionLabel setText:position];
-        }else if ((beacon1Rssi >= 20 || beacon1Rssi<= 60) && (beacon2Rssi >= 0 || beacon2Rssi <= 20)){
+        }else if ((beacon1Rssi >= -50 || beacon1Rssi<= -30) && (beacon2Rssi >= -90 || beacon2Rssi <= -51 )){
             
-            NSLog(@"sağda");
-            position = [NSString stringWithFormat:@"sağda"];
-            [positionLabel setText:position];
-        }else if ((beacon1Rssi >= 0 || beacon1Rssi<= 20) && (beacon2Rssi >= 0 || beacon2Rssi <= 20)){
+            if([beacon.major intValue] == 1 && [beacon2.major intValue] ==2){
+                
+                if(beacon1Rssi < beacon2Rssi){
+                    
+                    NSLog(@"dışarda, beacon1'e yakın, major id: %@", beacon.major);
+                    NSLog(@"%f %f", beacon1Rssi, beacon2Rssi);
+                    position = [NSString stringWithFormat:@"dışarda, beacon1'e yakın, major id: %@", beacon.major];
+                    [positionLabel setText:position];
+                    
+                }else if(beacon1Rssi > beacon2Rssi){
+                    
+                    NSLog(@"dışarda, beacon2'e yakın, major id: %@", beacon2.major);
+                    NSLog(@"%f %f", beacon1Rssi, beacon2Rssi);
+                    position = [NSString stringWithFormat:@"dışarda, beacon2'e yakın, major id: %@", beacon2.major];
+                    [positionLabel setText:position];
+                }
+                
+            }else if ([beacon.major intValue] == 2 && [beacon2.major intValue] == 1){
+                
+                if(beacon1Rssi < beacon2Rssi){
+                    
+                    NSLog(@"dışarda, beacon1'e yakın, major id: %@", beacon.major);
+                    NSLog(@"%f %f", beacon1Rssi, beacon2Rssi);
+                    position = [NSString stringWithFormat:@"dışarda, beacon1'e yakın, major id: %@", beacon.major];
+                    [positionLabel setText:position];
+                    
+                }else if(beacon1Rssi > beacon2Rssi){
+                    
+                    NSLog(@"dışarda, beacon2'e yakın, major id: %@", beacon2.major);
+                    NSLog(@"%f %f", beacon1Rssi, beacon2Rssi);
+                    position = [NSString stringWithFormat:@"dışarda, beacon2'e yakın, major id: %@", beacon2.major];
+                    [positionLabel setText:position];
+            }
+                
+        }
+            
+        }else if ((beacon1Rssi >= -30 || beacon1Rssi<= -91) && (beacon2Rssi >= -30 || beacon2Rssi <= -91)){
             
             NSLog(@"range dışında");
             position = [NSString stringWithFormat:@"range dışında"];
             [positionLabel setText:position];
         }
-    }else {
-        
+    }else if (beacon1Rssi == 0 && beacon2Rssi != 0){
         position = [NSString stringWithFormat:@"tek beacon"];
         [positionLabel setText:position];
+    }else if (beacon2Rssi == 0 && beacon1Rssi !=0){
+        position = [NSString stringWithFormat:@"tek beacon"];
+        [positionLabel setText:position];
+    }else if (beacon1Rssi == 0 && beacon2Rssi ==0){
+        position = [NSString stringWithFormat:@"range dışında"];
+        [positionLabel setText:position];
     }
-    
 }
 
 - (double) calculateAccuracy: (CLBeacon*) beacon {
@@ -131,16 +185,39 @@
     double txPower = -70;
     double ratio = beacon.rssi*1.0/txPower;
     if (ratio < 1.0) {
-        NSLog(@"ratiolara geldik");
         return pow(ratio,10);
     }
     else {
         double accuracy =  (0.89976) * pow(ratio,7.7095) + 0.111;
-        NSLog(@"accuracylere geldik");
-        NSString *num = [NSString stringWithFormat:@"%.20lf", accuracy];
-        distanceLabel.text = [NSString stringWithFormat:@"distance: %@", num];
         return accuracy;
     }
+    
+}
+
+- (CLBeacon *) findBeaconMajorID: (int)majorId {
+    
+    int numOfElements = [self.beacons count];
+    
+    for (int i =0; i < numOfElements ; i++){
+        
+        CLBeacon *beacon = [self.beacons objectAtIndex:i];
+        if([beacon.major intValue] == majorId)
+            return beacon;
+    }
+
+    return nil;
+}
+
+- (void) compareBeacons{
+    
+    CLBeacon* beacon1 = [self findBeaconMajorID:1];
+    CLBeacon* beacon2 = [self findBeaconMajorID:2];
+    
+    [self calculateProximityWithBeacon1:beacon1 andBeacon2:beacon2];
+
+    distanceLabel.text = [NSString stringWithFormat:@"distance: %f", [self calculateAccuracy:beacon1]];
+    
+    [self performSelector:@selector(compareBeacons) withObject:nil afterDelay:1];
     
 }
 

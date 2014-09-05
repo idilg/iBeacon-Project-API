@@ -22,34 +22,34 @@
     
     // UUID for first 2 beacons
     NSUUID *beaconUUID = [[NSUUID alloc] initWithUUIDString:@"824C42CF-ECFF-4045-A632-014FF08DF948"];
-    //NSString *beaconIdentifier = @"myBeacon";
+    NSString *beaconIdentifier = @"myBeacon";
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beaconUUID
-                                                                      identifier:@"myBeaconIdentifier"];
+                                                                      identifier:beaconIdentifier];
     
     //UUID for third beacon
-    NSUUID *beacon2UUID = [[NSUUID alloc] initWithUUIDString:@"70EE9563-EC34-489F-897C-79A3D0D41481"];
+    //NSUUID *beacon2UUID = [[NSUUID alloc] initWithUUIDString:@"70EE9563-EC34-489F-897C-79A3D0D41481"];
     //NSString *beacon2Identifier = @"myBeacon2";
-    CLBeaconRegion *beacon2Region = [[CLBeaconRegion alloc] initWithProximityUUID:beacon2UUID
-                                                                       identifier:@"myBeaconIdentifier2"];
+    //CLBeaconRegion *beacon2Region = [[CLBeaconRegion alloc] initWithProximityUUID:beacon2UUID identifier:beaconIdentifier];
 
     
-        self.locationManager = [[CLLocationManager alloc] init];
-        // New iOS 8 request for Always Authorization, required for iBeacons to work!
-        /*if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            [self.locationManager requestAlwaysAuthorization];
-        }*/
-        self.locationManager.delegate = self;
-        self.locationManager.pausesLocationUpdatesAutomatically = NO;
+    self.locationManager = [[CLLocationManager alloc] init];
+    // New iOS 8 request for Always Authorization, required for iBeacons to work!
+    /*if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+        [self.locationManager requestAlwaysAuthorization];
+    }*/
+    self.locationManager.delegate = self;
+    self.locationManager.pausesLocationUpdatesAutomatically = NO;
+
     
-        [self.locationManager startMonitoringForRegion:beaconRegion]; // first 2 beacon
-        [self.locationManager startRangingBeaconsInRegion:beaconRegion];
+    [self.locationManager startMonitoringForRegion:beaconRegion]; // first 2 beacon
+    [self.locationManager startRangingBeaconsInRegion:beaconRegion];
     
-        [self.locationManager startMonitoringForRegion:beacon2Region]; //third beacon
-        [self.locationManager startRangingBeaconsInRegion:beacon2Region];
+    //[self.locationManager startMonitoringForRegion:beacon2Region]; //third beacon
+    //[self.locationManager startRangingBeaconsInRegion:beacon2Region];
     
-        [self.locationManager startUpdatingLocation];
+    [self.locationManager startUpdatingLocation];
         
-        return YES;
+    return YES;
 }
 
 -(void)sendLocalNotificationWithMessage:(NSString*)message {
@@ -69,13 +69,15 @@
     
         NSString *message = @"";
     
-        if(beacons.count > 0) {
-            CLBeacon *nearestBeacon = beacons.firstObject;
+        CLBeacon *nearestBeacon = beacons.firstObject;
+    
+        if(nearestBeacon.rssi != 0) {
             
-            if(nearestBeacon.proximity == self.lastProximity ||
-               nearestBeacon.proximity == CLProximityUnknown) {
+            
+            if(nearestBeacon.proximity == self.lastProximity || nearestBeacon.proximity == CLProximityUnknown) {
                 return;
             }
+            
             self.lastProximity = nearestBeacon.proximity;
             
             switch(nearestBeacon.proximity) {
@@ -90,34 +92,66 @@
                     break;
                 case CLProximityUnknown:
                     return;
-        }
+            }
             
-        } else {
-            message = @"No beacons are nearby";
         }
     
+//        else if (nearestBeacon.rssi == 0){
+//            message = @"No beacons are nearby";
+//        }
+
         NSLog(@"%@", message);
-        [self sendLocalNotificationWithMessage:message];
+       [self sendLocalNotificationWithMessage:message];
+
 }
 
 -(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+
+    [manager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
+    [self.locationManager startUpdatingLocation];
+
+    NSLog(@"You entered the region.");
+    [self sendLocalNotificationWithMessage:@"You entered the region."];
     
-        [manager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
-        [self.locationManager startUpdatingLocation];
     
-        NSLog(@"You entered the region.");
-        [self sendLocalNotificationWithMessage:@"You entered the region."];
+    NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bilmiyordum.com/poi.json"]
+                                                cachePolicy: NSURLRequestUseProtocolCachePolicy
+                                            timeoutInterval: 60.0];
+    NSLog(@"requeste geldik");
+    
+    [NSURLConnection sendAsynchronousRequest:theRequest queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+     {
+         NSLog(@"Cevap : %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+     }];
+
+
+
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
     
-        [manager stopRangingBeaconsInRegion:(CLBeaconRegion*)region];
-        [self.locationManager stopUpdatingLocation];
     
-        NSLog(@"You exited the region.");
-        [self sendLocalNotificationWithMessage:@"You exited the region."];
+    [manager stopRangingBeaconsInRegion:(CLBeaconRegion*)region];
+    [self.locationManager stopUpdatingLocation];
+    
+    NSLog(@"You exited the region.");
+    [self sendLocalNotificationWithMessage:@"You exited the region."];
+
+    
+    NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bilmiyordum.com/user.json"]
+                                                cachePolicy: NSURLRequestUseProtocolCachePolicy
+                                            timeoutInterval: 60.0];
+    
+    [NSURLConnection sendAsynchronousRequest:theRequest queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+     {
+         NSLog(@"Cevap : %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+     }];
+
 }
-							
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
