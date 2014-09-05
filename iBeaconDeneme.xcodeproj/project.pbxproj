@@ -22,6 +22,7 @@
 		1A09B01819A3790E004AD4FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A09B01619A3790E004AD4FB /* InfoPlist.strings */; };
 		1A09B01A19A3790E004AD4FB /* iBeaconDenemeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A09B01919A3790E004AD4FB /* iBeaconDenemeTests.m */; };
 		1A09B02719A4836D004AD4FB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A09B02619A4836D004AD4FB /* CoreLocation.framework */; };
+		1A9F59CD19B9F1DA0077C180 /* TraceBeacons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9F59CC19B9F1DA0077C180 /* TraceBeacons.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,8 @@
 		1A09B01719A3790E004AD4FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1A09B01919A3790E004AD4FB /* iBeaconDenemeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iBeaconDenemeTests.m; sourceTree = "<group>"; };
 		1A09B02619A4836D004AD4FB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		1A9F59CB19B9F1DA0077C180 /* TraceBeacons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TraceBeacons.h; sourceTree = "<group>"; };
+		1A9F59CC19B9F1DA0077C180 /* TraceBeacons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TraceBeacons.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +126,8 @@
 				1A09B00419A3790E004AD4FB /* ViewController.m */,
 				1A09B00619A3790E004AD4FB /* Images.xcassets */,
 				1A09AFF519A3790E004AD4FB /* Supporting Files */,
+				1A9F59CB19B9F1DA0077C180 /* TraceBeacons.h */,
+				1A9F59CC19B9F1DA0077C180 /* TraceBeacons.m */,
 			);
 			path = iBeaconDeneme;
 			sourceTree = "<group>";
@@ -264,6 +269,7 @@
 				1A09B00519A3790E004AD4FB /* ViewController.m in Sources */,
 				1A09AFFF19A3790E004AD4FB /* AppDelegate.m in Sources */,
 				1A09AFFB19A3790E004AD4FB /* main.m in Sources */,
+				1A9F59CD19B9F1DA0077C180 /* TraceBeacons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,6 +20,7 @@
 @synthesize receivedData;
 @synthesize tableArray;
 @synthesize tableView;
+@synthesize label;
 
 - (void)viewDidLoad
 {

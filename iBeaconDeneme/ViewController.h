@@ -17,5 +17,6 @@
 @property IBOutlet UILabel *distanceLabel;
 @property (strong, nonatomic) NSArray *tableArray;
 @property (strong, nonatomic) NSData *receivedData;
+@property IBOutlet UILabel *label;
 
 @end
