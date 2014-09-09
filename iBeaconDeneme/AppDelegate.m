@@ -146,7 +146,7 @@
         
         if (!error && httpResp.statusCode == 200) {
             
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:urlString];
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
             NSArray *post = [[TraceBeacons sharedInstance] getVisitedBeacons];
             NSDictionary *tmp = [[NSDictionary alloc] initWithObjects:post forKeys:nil];
             NSData *postData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
