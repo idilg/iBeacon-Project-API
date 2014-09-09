@@ -19,5 +19,6 @@
 @property (nonatomic, strong) NSString *jsonData;
 @property UIBackgroundTaskIdentifier * backgroundTask;
 @property (strong, nonatomic) NSMutableData *receivedData;
+@property NSArray* foundBeacons;
 
 @end

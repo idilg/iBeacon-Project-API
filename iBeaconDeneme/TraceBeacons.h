@@ -9,10 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface TraceBeacons : NSObject
+@interface TraceBeacons : NSObject{
+    
+    NSMutableArray *visitedBeacons;
+}
 
-@property NSArray *foundBeacons;
-@property double *majorID;
-@property double *minorID;
+@property (nonatomic, retain) NSArray *visitedBeacons;
+
++(TraceBeacons *) sharedInstance;
+- (void) addBeacon:(id) beacon;
+- (NSArray *) getVisitedBeacons;
 
 @end

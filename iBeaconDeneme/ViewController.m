@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import "TraceBeacons.h"
 
 @interface ViewController ()
 
@@ -45,6 +46,7 @@
 
     
     [self performSelector:@selector(compareBeacons) withObject:nil afterDelay:1];
+    
 }
 
 - (void)didReceiveMemoryWarning

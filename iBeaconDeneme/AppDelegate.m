@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "TraceBeacons.h"
 
 #import <CoreLocation/CoreLocation.h>
 
@@ -15,7 +16,7 @@
 @implementation AppDelegate
 
 @synthesize receivedData;
-
+@synthesize foundBeacons;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -63,9 +64,7 @@
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
 
--(void)locationManager:(CLLocationManager *)manager didRangeBeacons:
-
-    (NSArray *)beacons inRegion:(CLBeaconRegion *)region {
+-(void)locationManager:(CLLocationManager *)manager didRangeBeacons: (NSArray *)beacons inRegion:(CLBeaconRegion *)region {
     
         ViewController *viewController = (ViewController*)self.window.rootViewController;
         viewController.beacons = beacons;
@@ -116,6 +115,7 @@
 
     NSLog(@"You entered the region.");
     [self sendLocalNotificationWithMessage:@"You entered the region."];
+    
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
@@ -131,10 +131,11 @@
 
 - (void) application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
     
-    NSLog(@"Background fetch started...");
+    NSLog(@"Background fetch started");
     
     //do background fetch here
     //You have up to 30 seconds to perform the fetch
+
     
     NSString *urlString = [NSString stringWithFormat:@"http://bilmiyordum.com/poi.json"];
     NSURLSession *session = [NSURLSession sharedSession];
@@ -145,6 +146,14 @@
         
         if (!error && httpResp.statusCode == 200) {
             
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:urlString];
+            NSArray *post = [[TraceBeacons sharedInstance] getVisitedBeacons];
+            NSDictionary *tmp = [[NSDictionary alloc] initWithObjects:post forKeys:nil];
+            NSData *postData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+            [request setHTTPBody:postData];
+            
+            /*
+             
             //print out the result obtained
             NSString *result = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
             NSLog(@"%@", result);
@@ -158,6 +167,8 @@
             dispatch_sync(dispatch_get_main_queue(), ^{
                 vc.label.text = self.jsonData;
             });
+             
+            */
             
             completionHandler(UIBackgroundFetchResultNewData);
                                                                              

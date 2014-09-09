@@ -11,16 +11,33 @@
 
 @implementation TraceBeacons
 
+@synthesize visitedBeacons;
 
-//selam dünyanın en saçma metodu slm
-- (void) locationManager: (CLLocationManager *)manager traceBeacons: (CLBeacon *)beacon inRegion: (CLRegion *)region{
++ (TraceBeacons *) sharedInstance{
     
-    BOOL inRegion = YES;
+    static TraceBeacons *_sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[TraceBeacons alloc] init];
+    });
+    return _sharedInstance;
+}
+
+- (NSArray *) getVisitedBeacons{
     
-    if(inRegion){
-        [((AppDelegate*) [[UIApplication sharedApplication] delegate]) locationManager:manager didEnterRegion:region];
-    }
+    return visitedBeacons;
+}
+
+- (void) addBeacon:(id) beacon{
     
+    if(visitedBeacons.count == 0){
+        [visitedBeacons addObject:beacon];
+        
+    }else if(![visitedBeacons containsObject:beacon]){
+        [visitedBeacons addObject:beacon];
+
+    }else
+        return;
 }
 
 @end
