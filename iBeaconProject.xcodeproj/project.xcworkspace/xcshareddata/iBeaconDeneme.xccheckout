@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>2D689941-9AFA-4FEB-A32F-7C2CC9287D66</string>
+	<key>IDESourceControlProjectName</key>
+	<string>iBeaconDeneme</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>4A3484B727B87A4C245BA31E058CCA2F8BAFEFCA</key>
+		<string>https://github.com/idilg/iBeaconDeneme.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>iBeaconDeneme.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>4A3484B727B87A4C245BA31E058CCA2F8BAFEFCA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/idilg/iBeaconDeneme.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>4A3484B727B87A4C245BA31E058CCA2F8BAFEFCA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>4A3484B727B87A4C245BA31E058CCA2F8BAFEFCA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iBeaconDeneme</string>
+		</dict>
+	</array>
+</dict>
+</plist>

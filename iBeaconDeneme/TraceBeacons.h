@@ -17,7 +17,9 @@
 @property (nonatomic, retain) NSArray *visitedBeacons;
 
 +(TraceBeacons *) sharedInstance;
+- (id) init;
 - (void) addBeacon:(id) beacon;
+- (void) removeBeacon:(id) beacon;
 - (NSArray *) getVisitedBeacons;
 
 @end

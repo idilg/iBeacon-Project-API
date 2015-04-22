@@ -7,14 +7,14 @@
 //
 
 #import "TraceBeacons.h"
-#import "AppDelegate.h"
+#import "Beacon.h"
 
 @implementation TraceBeacons
 
 @synthesize visitedBeacons;
 
-+ (TraceBeacons *) sharedInstance{
-    
++ (TraceBeacons *) sharedInstance
+{
     static TraceBeacons *_sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -23,21 +23,36 @@
     return _sharedInstance;
 }
 
-- (NSArray *) getVisitedBeacons{
-    
+- (id)init
+{
+    if (self = [super init])
+    {
+        visitedBeacons = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
+- (NSArray *) getVisitedBeacons
+{
     return visitedBeacons;
 }
 
-- (void) addBeacon:(id) beacon{
+- (void) addBeacon:(Beacon *) beacon
+{
+    if(beacon)
+    {
+        [visitedBeacons addObject:beacon];
+    }
     
-    if(visitedBeacons.count == 0){
-        [visitedBeacons addObject:beacon];
-        
-    }else if(![visitedBeacons containsObject:beacon]){
-        [visitedBeacons addObject:beacon];
-
-    }else
-        return;
 }
+
+- (void) removeBeacon:(Beacon *) beacon
+{
+    if(beacon)
+    {
+        [visitedBeacons removeObject:beacon];
+    }
+}
+
 
 @end

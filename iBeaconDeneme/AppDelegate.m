@@ -9,9 +9,12 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "TraceBeacons.h"
+#import "Beacon.h"
+#import "ConnectionManager.h"
+#import "AddRequest.h"
+#import "Logging.h"
 
 #import <CoreLocation/CoreLocation.h>
-
 
 @implementation AppDelegate
 
@@ -20,8 +23,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
-        // Override point for customization after application launch.
+    
+    // Override point for customization after application launch.
     
     // UUID for first 2 beacons
     NSUUID *beaconUUID = [[NSUUID alloc] initWithUUIDString:@"824C42CF-ECFF-4045-A632-014FF08DF948"];
@@ -29,30 +32,35 @@
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beaconUUID
                                                                       identifier:beaconIdentifier];
     /*
-    //UUID for third beacon
-    NSUUID *beacon2UUID = [[NSUUID alloc] initWithUUIDString:@"70EE9563-EC34-489F-897C-79A3D0D41481"];
-    NSString *beacon2Identifier = @"myBeacon2";
-    CLBeaconRegion *beacon2Region = [[CLBeaconRegion alloc] initWithProximityUUID:beacon2UUID identifier:beaconIdentifier];
+     //UUID for third beacon
+     NSUUID *beacon2UUID = [[NSUUID alloc] initWithUUIDString:@"70EE9563-EC34-489F-897C-79A3D0D41481"];
+     NSString *beacon2Identifier = @"myBeacon2";
+     CLBeaconRegion *beacon2Region = [[CLBeaconRegion alloc] initWithProximityUUID:beacon2UUID identifier:beaconIdentifier];
      */
     
     self.locationManager = [[CLLocationManager alloc] init];
+    
     // New iOS 8 request for Always Authorization, required for iBeacons to work!
-    /*if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+    if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    {
         [self.locationManager requestAlwaysAuthorization];
-    }*/
+    }
+    
     self.locationManager.delegate = self;
     self.locationManager.pausesLocationUpdatesAutomatically = NO;
-
+    
     
     [self.locationManager startMonitoringForRegion:beaconRegion]; // first 2 beacon
     [self.locationManager startRangingBeaconsInRegion:beaconRegion];
     
-    /*[self.locationManager startMonitoringForRegion:beacon2Region]; //third beacon
-    [self.locationManager startRangingBeaconsInRegion:beacon2Region];*/
+    /*
+    [self.locationManager startMonitoringForRegion:beacon2Region]; //third beacon
+    [self.locationManager startRangingBeaconsInRegion:beacon2Region];
+    */
     
     [self.locationManager startUpdatingLocation];
     
-    [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval: UIApplicationBackgroundFetchIntervalMinimum];
+    [application setMinimumBackgroundFetchInterval: UIApplicationBackgroundFetchIntervalMinimum];
     
     return YES;
 }
@@ -62,63 +70,83 @@
     UILocalNotification *notification = [[UILocalNotification alloc] init];
     notification.alertBody = message;
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    
 }
 
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons: (NSArray *)beacons inRegion:(CLBeaconRegion *)region {
     
-        ViewController *viewController = (ViewController*)self.window.rootViewController;
-        viewController.beacons = beacons;
-        [viewController.tableView reloadData];
+    ViewController *viewController = (ViewController*)self.window.rootViewController;
+    viewController.beacons = beacons;
+    [viewController.tableView reloadData];
     
-        NSString *message = @"";
+    NSString *message = @"";
     
-        CLBeacon *nearestBeacon = beacons.firstObject;
     
-        if(nearestBeacon.rssi != 0) {
-            
-            
-            if(nearestBeacon.proximity == self.lastProximity || nearestBeacon.proximity == CLProximityUnknown) {
-                return;
-            }
-            
-            self.lastProximity = nearestBeacon.proximity;
-            
-            switch(nearestBeacon.proximity) {
-                case CLProximityFar:
-                    message = @"You are far away from the beacon";
-                    break;
-                case CLProximityNear:
-                    message = @"You are near the beacon";
-                    break;
-                case CLProximityImmediate:
-                    message = @"You are in the immediate proximity of the beacon";
-                    break;
-                case CLProximityUnknown:
-                    return;
-            }
-            
-        }
+    //CLBeacon *nearestBeacon = beacons.firstObject;
+    NSLog(@" nearest beacon: %@",beacons);
+    for(id nearestBeacon in beacons)
+    {
+        Beacon *beacon = [[Beacon alloc] initWithCLBeacon:nearestBeacon];
     
-//        else if (nearestBeacon.rssi == 0){
-//            message = @"No beacons are nearby";
+        [[TraceBeacons sharedInstance] addBeacon:beacon];
+    }
+    NSArray *visited = [[TraceBeacons sharedInstance] getVisitedBeacons];
+    
+    NSLog(@" visited beacon: %@", visited);
+    
+    
+//    if([beacons count] > 0 && nearestBeacon.rssi != 0)
+//    {
+//        if(nearestBeacon.proximity == self.lastProximity ||
+//           nearestBeacon.proximity == CLProximityUnknown)
+//        {
+//            return;
 //        }
-
-        NSLog(@"%@", message);
-       [self sendLocalNotificationWithMessage:message];
-
+//        
+//        self.lastProximity = nearestBeacon.proximity;
+//        
+//        switch(nearestBeacon.proximity)
+//        {
+//            case CLProximityFar:
+//                message = @"You are far away from the beacon";
+//                break;
+//                
+//            case CLProximityNear:
+//                message = @"You are near the beacon";
+//                break;
+//                
+//            case CLProximityImmediate:
+//                message = @"You are in the immediate proximity of the beacon";
+//                break;
+//                
+//            case CLProximityUnknown:
+//                return;
+//        }
+//    }
+    
+//    else if (nearestBeacon.rssi == 0)
+//    {
+//        message = @"No beacons are nearby";
+//    }
+    
+    NSLog(@"%@", message);
+    [self sendLocalNotificationWithMessage:message];
+    
 }
 
--(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
-
+-(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+{
+    
     [manager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
     [self.locationManager startUpdatingLocation];
-
+    
     NSLog(@"You entered the region.");
     [self sendLocalNotificationWithMessage:@"You entered the region."];
     
 }
 
--(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+-(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
+{
     
     
     [manager stopRangingBeaconsInRegion:(CLBeaconRegion*)region];
@@ -129,69 +157,45 @@
     
 }
 
-- (void) application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
+
+- (void) application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
     
     NSLog(@"Background fetch started");
     
     //do background fetch here
     //You have up to 30 seconds to perform the fetch
+    
 
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://bilmiyordum.com/poi.json"];
-    NSURLSession *session = [NSURLSession sharedSession];
-    
-    [[session dataTaskWithURL:[NSURL URLWithString:urlString] completionHandler:^(NSData *data, NSURLResponse *response,NSError *error) {
+    for (Beacon *beacon in [[TraceBeacons sharedInstance] getVisitedBeacons])
+    {
+        AddRequest *aRequest = [AddRequest new];
+        aRequest.majorid = [NSString stringWithFormat:@"%d",beacon.majorId];
+        aRequest.minorid = [NSString stringWithFormat:@"%d",beacon.minorId];
+        aRequest.rssi = [NSString stringWithFormat:@"%d",beacon.rssi];
+        aRequest.deviceId = [[UIDevice currentDevice].identifierForVendor UUIDString];
+        aRequest.timestamp = [NSString stringWithFormat:@"%f",[beacon.time timeIntervalSince1970]];
         
-        NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
+        NSLog(@"aRequest: %@", aRequest);
         
-        if (!error && httpResp.statusCode == 200) {
-            
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
-            NSArray *post = [[TraceBeacons sharedInstance] getVisitedBeacons];
-            NSDictionary *tmp = [[NSDictionary alloc] initWithObjects:post forKeys:nil];
-            NSData *postData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
-            [request setHTTPBody:postData];
-            
-            /*
-             
-            //print out the result obtained
-            NSString *result = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", result);
-            
-            //parse the JSON result
-            [self parseJSONData:data];
-            
-            //update viewcontroller
-            ViewController *vc = (ViewController *) [[[UIApplication sharedApplication] keyWindow] rootViewController];
-            
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                vc.label.text = self.jsonData;
-            });
-             
-            */
-            
+        [[ConnectionManager sharedManager] request:aRequest success:^(id response){
+            LogDebug(@"response : %@", response);
             completionHandler(UIBackgroundFetchResultNewData);
-                                                                             
-            NSLog(@"Background fetch completed...");
-                                                                             
-            } else {
-                
-                NSLog(@"%@", error.description);
-                
-                completionHandler(UIBackgroundFetchResultFailed);
-                
-                NSLog(@"Background fetch Failed...");
-            }
-        }
-      ]
-    
-      resume
-                
-     ];
-    
+            
+            [[TraceBeacons sharedInstance] removeBeacon:beacon];
+            
+            NSLog(@"Background fetch completed.");
+        } failure:^(NSError *error) {
+            LogDebug(@"error : %@", error);
+            completionHandler(UIBackgroundFetchResultFailed);
+            
+            NSLog(@"Background fetch failed.");
+        }];
+    }
 }
 
-- (void)parseJSONData:(NSData *)data {
+- (void)parseJSONData:(NSData *)data
+{
     NSError *error;
     NSString *parsedJSONData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     
@@ -210,8 +214,16 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    
+    //background fetch'de beacon'ı sürekli dinlemesi/update etmesi için
+    UIApplication *app = [UIApplication sharedApplication];
+    UIBackgroundTaskIdentifier bgTask;
+    bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+    [app endBackgroundTask:bgTask];
+    }];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

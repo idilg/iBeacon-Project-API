@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 İdil Gücüyener. All rights reserved.
 //
 
+
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A09AFEA19A3790E004AD4FB"
-               BuildableName = "iBeaconDeneme.app"
-               BlueprintName = "iBeaconDeneme"
-               ReferencedContainer = "container:iBeaconDeneme.xcodeproj">
+               BuildableName = "iBeaconProject.app"
+               BlueprintName = "iBeaconProject"
+               ReferencedContainer = "container:iBeaconProject.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A09B00B19A3790E004AD4FB"
-               BuildableName = "iBeaconDenemeTests.xctest"
-               BlueprintName = "iBeaconDenemeTests"
-               ReferencedContainer = "container:iBeaconDeneme.xcodeproj">
+               BuildableName = "iBeaconProjectTests.xctest"
+               BlueprintName = "iBeaconProjectTests"
+               ReferencedContainer = "container:iBeaconProject.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A09AFEA19A3790E004AD4FB"
-            BuildableName = "iBeaconDeneme.app"
-            BlueprintName = "iBeaconDeneme"
-            ReferencedContainer = "container:iBeaconDeneme.xcodeproj">
+            BuildableName = "iBeaconProject.app"
+            BlueprintName = "iBeaconProject"
+            ReferencedContainer = "container:iBeaconProject.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A09AFEA19A3790E004AD4FB"
-            BuildableName = "iBeaconDeneme.app"
-            BlueprintName = "iBeaconDeneme"
-            ReferencedContainer = "container:iBeaconDeneme.xcodeproj">
+            BuildableName = "iBeaconProject.app"
+            BlueprintName = "iBeaconProject"
+            ReferencedContainer = "container:iBeaconProject.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -80,9 +80,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A09AFEA19A3790E004AD4FB"
-            BuildableName = "iBeaconDeneme.app"
-            BlueprintName = "iBeaconDeneme"
-            ReferencedContainer = "container:iBeaconDeneme.xcodeproj">
+            BuildableName = "iBeaconProject.app"
+            BlueprintName = "iBeaconProject"
+            ReferencedContainer = "container:iBeaconProject.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
